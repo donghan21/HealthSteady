@@ -12,18 +12,33 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late double H;
   late double W;
   FirebaseFirestore db = FirebaseFirestore.instance;
+  //late List<dynamic> groupList = [];
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {});
-    });
+    //_tabController = TabController(length: 2, vsync: this);
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   setState(() {
+    //     initGroups();
+    //   });
+    // });
+  }
+
+  Future<List<DocumentReference>> _fetchGroups() async {
+    CollectionReference users = db.collection('users');
+    DocumentSnapshot userDocument =
+        await users.doc(FirebaseAuth.instance.currentUser!.email!).get();
+     Map<String, dynamic> data = userDocument.data() as Map<String, dynamic>;
+    List<DocumentReference> groupList = List<DocumentReference>.from(data['group']);
+    //_tabController = TabController(length: groupList.length, vsync: this);
+    return groupList;
   }
 
   @override
@@ -31,16 +46,21 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Future<List<dynamic>> _fetchMembers() async {
-    CollectionReference groups = db.collection('groups');
-    DocumentSnapshot groupDocument =
-        await groups.doc(FirebaseAuth.instance.currentUser!.email!).get();
-    var memberList = groupDocument['member'];
+  Future<List<Map<String, dynamic>>> _fetchMembers(DocumentReference group) async {
+    // CollectionReference groups = db.collection('groups');
+    // DocumentSnapshot groupDocument =
+    //     await groups.doc(FirebaseAuth.instance.currentUser!.email!).get();
+    // var memberList = groupDocument['member'];
+    DocumentSnapshot groupDocument = await group.get();
+    var data = groupDocument.data() as Map<String, dynamic>;
+    List<DocumentReference> memberList = List<DocumentReference>.from(data['member']);
+    print('memberlist : $memberList');
 
-    List<dynamic> memberInfoList = [];
+    List<Map<String, dynamic>> memberInfoList = [];
     for (var member in memberList) {
       DocumentSnapshot memberDocument = await member.get();
-      memberInfoList.add(memberDocument.data());
+      print('memberdocument data : ${memberDocument.data()}');
+      memberInfoList.add(memberDocument.data() as Map<String, dynamic>);
     }
 
     return memberInfoList;
@@ -50,192 +70,384 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     H = MediaQuery.of(context).size.height;
     W = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        //bottomNavigationBar: getBottomNavigationBar(context, 0),
-        body: Column(children: [
-          GestureDetector(
-            onTap: () {
-              widget.onButtonPressed();
-            },
-            child: Container(
-                color: Colors.red,
-                height: H * 0.22,
-                width: W,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'START',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'WORKOUT',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'NOW',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                )),
-          ),
-          Expanded(
-            child: FutureBuilder(
-                future: _fetchMembers(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 2 / 3 // Number of items in a row
+    return FutureBuilder<List<DocumentReference>>(
+        future: _fetchGroups(),
+        builder: (context, groupsnapshot) {
+          if (groupsnapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (groupsnapshot.hasError) {
+            return Text('Error: ${groupsnapshot.error}');
+          } else {
+            _tabController =
+                TabController(length: groupsnapshot.data!.length, vsync: this);
+            return SafeArea(
+              child: Scaffold(
+                backgroundColor: Colors.black,
+                //bottomNavigationBar: getBottomNavigationBar(context, 0),
+                body: Column(children: [
+                  GestureDetector(
+                    onTap: () {
+                      widget.onButtonPressed();
+                    },
+                    child: Container(
+                        color: Colors.red,
+                        height: H * 0.22,
+                        width: W,
+                        child: const  Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'START',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold),
                             ),
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          int actualMinutes =
-                              snapshot.data![index]['workout_time']['actual'];
-                          int goalMinutes =
-                              snapshot.data![index]['workout_time']['goal'];
-                          return GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    // return AlertDialog(
-                                    //   title: Text(snapshot.data![index]['nickname']),
-                                    //   content: Text('운동시간: ${minutes ~/ 60}h ${minutes % 60}m'),
-                                    //   actions: [
-                                    //     TextButton(onPressed: () {
-                                    //       Navigator.pop(context);
-                                    //     }, child: Text('확인'))
-                                    //   ],
-                                    // );
-                                    return Dialog(
-                                      child: Container(
-                                        height: H * 0.5,
-                                        width: W * 0.8,
-                                        decoration: BoxDecoration(
-                                          color: Colors.black,
-                                          border: Border.all(
-                                              color: Colors.white, width: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Column(children: [
-                                          SizedBox(height: H * 0.01),
-                                          SizedBox(
-                                              height: H * 0.05,
-                                              child: Text(
-                                                snapshot.data![index]
-                                                    ['nickname'],
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )),
-                                          Container(
-                                            height: H * 0.15,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: Image.asset(
-                                                        'assets/images/memoticon1.png')
-                                                    .image,
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: H * 0.05),
-                                          SizedBox(
-                                            height: H * 0.04,
-                                            child: Text(
-                                              '이번주 운동 횟수 ${snapshot.data![index]['workout_number']['actual']}회 (목표 ${snapshot.data![index]['workout_number']['goal']}회)',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: H * 0.04,
-                                            child: Text(
-                                              '이번주 운동 시간 ${actualMinutes ~/ 60}:${actualMinutes % 60} (목표 ${goalMinutes ~/ 60}:${(goalMinutes % 60).toString().padLeft(2, '0')})',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: H * 0.04,
-                                            child: Text(
-                                              '상태 메시지 : ${snapshot.data![index]['status_message']}',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                          )
-                                        ]),
-                                      ),
-                                    );
-                                  });
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: H * 0.15,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: Image.asset(
-                                              'assets/images/memoticon1.png')
-                                          .image,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  snapshot.data![index]['nickname'],
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                    '${actualMinutes ~/ 60}h ${(actualMinutes % 60).toString().padLeft(2, '0')}m',
-                                    style: TextStyle(color: Colors.white))
-                              ],
+                            Text(
+                              'WORKOUT',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          );
-                        });
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                }),
-          )
-        ]),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.red,
-          onPressed: () {
-            Navigator.pushNamed(context, '/invite');
-          },
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
+                            Text(
+                              'NOW',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )),
+                  ),
+                  Container(
+                    height: H * 0.1,
+                    width: W * 0.5,
+                    color: Colors.black,
+                    child: TabBar(
+                      controller: _tabController,
+                      indicatorColor: Colors.red,
+                      labelColor: Colors.red,
+                      unselectedLabelColor: Colors.white,
+                      tabs: groupsnapshot.data!
+                          .map((group) => Tab(icon: CircleAvatar()))
+                          .toList(),
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: groupsnapshot.data!
+                          .map(
+                            (group) => FutureBuilder(
+                                future: _fetchMembers(group),
+                                builder: (context, membersnapshot) {
+                                  if (membersnapshot.hasData) {
+                                    return GridView.builder(
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 3,
+                                                childAspectRatio: 2 /
+                                                    3 // Number of items in a row
+                                                ),
+                                        shrinkWrap: true,
+                                        itemCount: membersnapshot.data!.length,
+                                        itemBuilder: (context, index) {
+                                          int actualMinutes =
+                                              membersnapshot.data![index]
+                                                  ['workout_time']['actual'];
+                                          int goalMinutes =
+                                              membersnapshot.data![index]
+                                                  ['workout_time']['goal'];
+                                          return GestureDetector(
+                                            onTap: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    // return AlertDialog(
+                                                    //   title: Text(snapshot.data![index]['nickname']),
+                                                    //   content: Text('운동시간: ${minutes ~/ 60}h ${minutes % 60}m'),
+                                                    //   actions: [
+                                                    //     TextButton(onPressed: () {
+                                                    //       Navigator.pop(context);
+                                                    //     }, child: Text('확인'))
+                                                    //   ],
+                                                    // );
+                                                    return Dialog(
+                                                      child: Container(
+                                                        height: H * 0.5,
+                                                        width: W * 0.8,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.black,
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 2),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        child:
+                                                            Column(children: [
+                                                          SizedBox(
+                                                              height: H * 0.01),
+                                                          SizedBox(
+                                                              height: H * 0.05,
+                                                              child: Text(
+                                                                membersnapshot.data![
+                                                                        index][
+                                                                    'nickname'],
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              )),
+                                                          Container(
+                                                            height: H * 0.15,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: Image.asset(
+                                                                        'assets/images/memoticon1.png')
+                                                                    .image,
+                                                                fit: BoxFit
+                                                                    .contain,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              height: H * 0.05),
+                                                          SizedBox(
+                                                            height: H * 0.04,
+                                                            child: Text(
+                                                              '이번주 운동 횟수 ${membersnapshot.data![index]['workout_number']['actual']}회 (목표 ${membersnapshot.data![index]['workout_number']['goal']}회)',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 15,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: H * 0.04,
+                                                            child: Text(
+                                                              '이번주 운동 시간 ${actualMinutes ~/ 60}:${actualMinutes % 60} (목표 ${goalMinutes ~/ 60}:${(goalMinutes % 60).toString().padLeft(2, '0')})',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 15,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: H * 0.04,
+                                                            child: Text(
+                                                              '상태 메시지 : ${membersnapshot.data![index]['status_message']}',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 15,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ]),
+                                                      ),
+                                                    );
+                                                  });
+                                            },
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  height: H * 0.15,
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: Image.asset(
+                                                              'assets/images/memoticon1.png')
+                                                          .image,
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  membersnapshot.data![index]
+                                                      ['nickname'],
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(
+                                                    '${actualMinutes ~/ 60}h ${(actualMinutes % 60).toString().padLeft(2, '0')}m',
+                                                    style: TextStyle(
+                                                        color: Colors.white))
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                  } else {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                }),
+                          )
+                          .toList(),
+
+                      // child: FutureBuilder(
+                      //     future: _fetchMembers(),
+                      //     builder: (context, snapshot) {
+                      //       if (snapshot.hasData) {
+                      //         return GridView.builder(
+                      //             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      //                 crossAxisCount: 3,
+                      //                 childAspectRatio: 2 / 3 // Number of items in a row
+                      //                 ),
+                      //             shrinkWrap: true,
+                      //             itemCount: snapshot.data!.length,
+                      //             itemBuilder: (context, index) {
+                      //               int actualMinutes =
+                      //                   snapshot.data![index]['workout_time']['actual'];
+                      //               int goalMinutes =
+                      //                   snapshot.data![index]['workout_time']['goal'];
+                      //               return GestureDetector(
+                      //                 onTap: () {
+                      //                   showDialog(
+                      //                       context: context,
+                      //                       builder: (context) {
+                      //                         // return AlertDialog(
+                      //                         //   title: Text(snapshot.data![index]['nickname']),
+                      //                         //   content: Text('운동시간: ${minutes ~/ 60}h ${minutes % 60}m'),
+                      //                         //   actions: [
+                      //                         //     TextButton(onPressed: () {
+                      //                         //       Navigator.pop(context);
+                      //                         //     }, child: Text('확인'))
+                      //                         //   ],
+                      //                         // );
+                      //                         return Dialog(
+                      //                           child: Container(
+                      //                             height: H * 0.5,
+                      //                             width: W * 0.8,
+                      //                             decoration: BoxDecoration(
+                      //                               color: Colors.black,
+                      //                               border: Border.all(
+                      //                                   color: Colors.white, width: 2),
+                      //                               borderRadius:
+                      //                                   BorderRadius.circular(10),
+                      //                             ),
+                      //                             child: Column(children: [
+                      //                               SizedBox(height: H * 0.01),
+                      //                               SizedBox(
+                      //                                   height: H * 0.05,
+                      //                                   child: Text(
+                      //                                     snapshot.data![index]
+                      //                                         ['nickname'],
+                      //                                     style: const TextStyle(
+                      //                                         color: Colors.white,
+                      //                                         fontSize: 20,
+                      //                                         fontWeight:
+                      //                                             FontWeight.bold),
+                      //                                   )),
+                      //                               Container(
+                      //                                 height: H * 0.15,
+                      //                                 decoration: BoxDecoration(
+                      //                                   image: DecorationImage(
+                      //                                     image: Image.asset(
+                      //                                             'assets/images/memoticon1.png')
+                      //                                         .image,
+                      //                                     fit: BoxFit.contain,
+                      //                                   ),
+                      //                                 ),
+                      //                               ),
+                      //                               SizedBox(height: H * 0.05),
+                      //                               SizedBox(
+                      //                                 height: H * 0.04,
+                      //                                 child: Text(
+                      //                                   '이번주 운동 횟수 ${snapshot.data![index]['workout_number']['actual']}회 (목표 ${snapshot.data![index]['workout_number']['goal']}회)',
+                      //                                   style: const TextStyle(
+                      //                                     color: Colors.white,
+                      //                                     fontSize: 15,
+                      //                                   ),
+                      //                                 ),
+                      //                               ),
+                      //                               SizedBox(
+                      //                                 height: H * 0.04,
+                      //                                 child: Text(
+                      //                                   '이번주 운동 시간 ${actualMinutes ~/ 60}:${actualMinutes % 60} (목표 ${goalMinutes ~/ 60}:${(goalMinutes % 60).toString().padLeft(2, '0')})',
+                      //                                   style: TextStyle(
+                      //                                     color: Colors.white,
+                      //                                     fontSize: 15,
+                      //                                   ),
+                      //                                 ),
+                      //                               ),
+                      //                               SizedBox(
+                      //                                 height: H * 0.04,
+                      //                                 child: Text(
+                      //                                   '상태 메시지 : ${snapshot.data![index]['status_message']}',
+                      //                                   style: TextStyle(
+                      //                                     color: Colors.white,
+                      //                                     fontSize: 15,
+                      //                                   ),
+                      //                                 ),
+                      //                               )
+                      //                             ]),
+                      //                           ),
+                      //                         );
+                      //                       });
+                      //                 },
+                      //                 child: Column(
+                      //                   children: [
+                      //                     Container(
+                      //                       height: H * 0.15,
+                      //                       decoration: BoxDecoration(
+                      //                         image: DecorationImage(
+                      //                           image: Image.asset(
+                      //                                   'assets/images/memoticon1.png')
+                      //                               .image,
+                      //                           fit: BoxFit.contain,
+                      //                         ),
+                      //                       ),
+                      //                     ),
+                      //                     Text(
+                      //                       snapshot.data![index]['nickname'],
+                      //                       style: TextStyle(
+                      //                           color: Colors.white,
+                      //                           fontSize: 15,
+                      //                           fontWeight: FontWeight.bold),
+                      //                     ),
+                      //                     Text(
+                      //                         '${actualMinutes ~/ 60}h ${(actualMinutes % 60).toString().padLeft(2, '0')}m',
+                      //                         style: TextStyle(color: Colors.white))
+                      //                   ],
+                      //                 ),
+                      //               );
+                      //             });
+                      //       } else {
+                      //         return const Center(child: CircularProgressIndicator());
+                      //       }
+                      //     }),
+                    ),
+                  )
+                ]),
+                floatingActionButton: FloatingActionButton(
+                  backgroundColor: Colors.red,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/invite');
+                  },
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            );
+          }
+        });
   }
 }
