@@ -18,11 +18,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late double W;
   FirebaseFirestore db = FirebaseFirestore.instance;
   //late List<dynamic> groupList = [];
-  late TabController _tabController;
+  late TabController _tabController;  
 
   @override
   void initState() {
     super.initState();
+
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() { 
+      if(_tabController.previousIndex != _tabController.index) {
+        print('tabcontroller index : ${_tabController.index}');
+        setState(() {});
+      }
+    });
     //_tabController = TabController(length: 2, vsync: this);
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   setState(() {
@@ -121,17 +129,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         )),
                   ),
                   Container(
-                    height: H * 0.1,
-                    width: W * 0.5,
+                    height: H * 0.04,
+                    width: W,
                     color: Colors.black,
                     child: TabBar(
+                      indicator: BoxDecoration(),
                       controller: _tabController,
                       indicatorColor: Colors.red,
                       labelColor: Colors.red,
-                      unselectedLabelColor: Colors.white,
-                      tabs: groupsnapshot.data!
-                          .map((group) => Tab(icon: CircleAvatar()))
+                      unselectedLabelColor: const Color.fromARGB(255, 73, 5, 5),
+                      tabs: groupsnapshot.data!.asMap().entries
+                          .map((entry) {
+                            int idx = entry.key;
+                            var group = entry.value;
+                            return Tab(child: Icon(Icons.circle, size: 10));
+                          })
                           .toList(),
+                  //     tabs: List<Widget>.generate(_tabController.length, (int index) {
+                  //                         return Tab( child: Text(''),
+                  // );
+                  //     }
+                  //     )
                     ),
                   ),
                   Expanded(
@@ -143,6 +161,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 future: _fetchMembers(group),
                                 builder: (context, membersnapshot) {
                                   if (membersnapshot.hasData) {
+                                    print('index : ${_tabController.index}');
                                     return GridView.builder(
                                         gridDelegate:
                                             const SliverGridDelegateWithFixedCrossAxisCount(
