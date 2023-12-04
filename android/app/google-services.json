@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "946292666203",
+    "project_id": "healthsteady-f1a92",
+    "storage_bucket": "healthsteady-f1a92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946292666203:android:073b0d37b340f79d10b47e",
+        "android_client_info": {
+          "package_name": "com.example.healthsteady"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiA1KSzZB6qvWqAqgbIVpi-C5Ks7EEfZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
