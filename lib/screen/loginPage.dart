@@ -156,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                       _isLoading = false;
                     });
                     if (_signInResult) {
-                      Navigator.pushReplacementNamed(context, '/home');
+                      Navigator.pushReplacementNamed(context, '/myhome');
                     }
                   },
                   style: ButtonStyle(

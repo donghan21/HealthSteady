@@ -5,7 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final VoidCallback onButtonPressed;
+  const HomePage({super.key, required this.onButtonPressed});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -52,38 +53,43 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
-        bottomNavigationBar: getBottomNavigationBar(context, 0),
+        //bottomNavigationBar: getBottomNavigationBar(context, 0),
         body: Column(children: [
-          Container(
-              color: Colors.red,
-              height: H * 0.22,
-              width: W,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'START',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'WORKOUT',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'NOW',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              )),
+          GestureDetector(
+            onTap: () {
+              widget.onButtonPressed();
+            },
+            child: Container(
+                color: Colors.red,
+                height: H * 0.22,
+                width: W,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'START',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'WORKOUT',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'NOW',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                )),
+          ),
           Expanded(
             child: FutureBuilder(
                 future: _fetchMembers(),

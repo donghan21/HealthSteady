@@ -27,16 +27,9 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: getBottomNavigationBar(context, 2),
+      //bottomNavigationBar: getBottomNavigationBar(context, 2),
         body: Scaffold(
           backgroundColor: Colors.black,
-        ),
-        floatingActionButton: const FloatingActionButton(
-            backgroundColor: Colors.red,
-            onPressed: null,
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            )));
+        ));
   }
 }

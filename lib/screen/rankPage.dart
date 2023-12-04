@@ -9,6 +9,7 @@ class RankPage extends StatefulWidget {
 }
 
 class _RankPageState extends State<RankPage> {
+  int _counter = 0;
 
   @override
   void initState() {
@@ -23,19 +24,43 @@ class _RankPageState extends State<RankPage> {
     super.dispose();
   }
 
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: getBottomNavigationBar(context, 1),
+      //bottomNavigationBar: getBottomNavigationBar(context, 1),
         body: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Rank Page',
+                  style: TextStyle(color: Colors.white),
+                ),
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ],
+            ),
+          ),
           backgroundColor: Colors.black,
+          
+          floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.red,
+        onPressed: _incrementCounter,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
         ),
-        floatingActionButton: const FloatingActionButton(
-            backgroundColor: Colors.red,
-            onPressed: null,
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            )));
+      ),
+        ),
+       );
   }
 }
