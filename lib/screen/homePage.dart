@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../utils/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback onButtonPressed;
@@ -82,7 +83,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         future: _fetchGroups(),
         builder: (context, groupsnapshot) {
           if (groupsnapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Container(
+              width: W, height: H,
+              color: Colors.black,
+              );
           } else if (groupsnapshot.hasError) {
             return Text('Error: ${groupsnapshot.error}');
           } else {
@@ -312,8 +316,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           );
                                         });
                                   } else {
-                                    return const Center(
-                                        child: CircularProgressIndicator());
+                                    return Container(
+                                      color: Colors.black,
+                                      child: const Center(
+                                          child: CircularProgressIndicator()),
+                                    );
                                   }
                                 }),
                           )
@@ -455,9 +462,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   )
                 ]),
                 floatingActionButton: FloatingActionButton(
+                  heroTag : _tabController.index,
                   backgroundColor: Colors.red,
                   onPressed: () {
+                    print('herotag : ${_tabController.index}');
+                    if(_tabController.index == 0) {
                     Navigator.pushNamed(context, '/invite');
+                    } else {
+                   
+                    Fluttertoast.showToast(
+                        msg: "그룹장만 초대할 수 있습니다.",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.grey,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    }
                   },
                   child: const Icon(
                     Icons.add,

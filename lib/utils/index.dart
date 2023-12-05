@@ -5,4 +5,5 @@ export '../screen/rankPage.dart' show RankPage;
 export '../screen/settingPage.dart' show SettingPage;
 export '../screen/invitePage.dart' show InvitePage;
 export '../screen/myhomePage.dart' show MyHomePage;
+export '../screen/setGoalPage.dart' show SetGoalPage;
 export 'bottomNavigationBar.dart';

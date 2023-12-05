@@ -46,35 +46,41 @@ class _SettingPageState extends State<SettingPage> {
           ),
           SizedBox(height: H * 0.02),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          SizedBox(height: H * 0.06, width: W*0.8, child: Row(children: [
+          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
             Text('회원정보 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
             Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
           ])),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          SizedBox(height: H * 0.06, width: W*0.8, child: Row(children: [
-            Text('운동목표 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
-            Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
-          ])),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/setGoal');
+              },
+            child: SizedBox(height: H * 0.06, width: W*0.8, 
+              child: const Row(children: [
+              Text('운동목표 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
+              Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
+            ])),
+          ),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          SizedBox(height: H * 0.06, width: W*0.8, child: Row(children: [
+          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
             Text('헬스장 설정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
             Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
           ])),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          SizedBox(height: H * 0.06, width: W*0.8, child: Row(children: [
+          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
             Text('알람 설정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
             Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
           ])),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          SizedBox(height: H * 0.06, width: W*0.8, child: Row(children: [
+          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
             Text('자주묻는 질문', style: TextStyle(color: Colors.white, fontSize: 15.0)),
             Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
           ])),
-          SizedBox(height: H * 0.06, width: W*0.8, child: Row(children: [
+          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
             Text('앱 가이드', style: TextStyle(color: Colors.white, fontSize: 15.0)),
             Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
           ])),
-          SizedBox(height: H * 0.06, width: W*0.8, child: Row(children: [
+          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
             Text('앱 정보', style: TextStyle(color: Colors.white, fontSize: 15.0)),
             Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
           ])), 

@@ -149,7 +149,7 @@ class _InvitePageState extends State<InvitePage> {
                         );
                       });
                 } else {
-                  return const Center(child: CircularProgressIndicator());
+                  return Container(color: Colors.black, child: const Center(child: CircularProgressIndicator()));
                 }
               }),
             )
