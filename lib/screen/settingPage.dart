@@ -51,7 +51,7 @@ class _SettingPageState extends State<SettingPage> {
             Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
           ])),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          GestureDetector(
+          InkWell(
             onTap: () {
               Navigator.pushNamed(context, '/setGoal');
               },
