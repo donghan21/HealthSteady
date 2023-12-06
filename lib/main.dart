@@ -32,9 +32,8 @@ class MyApp extends StatelessWidget {
         '/home' : (context) =>  HomePage(onButtonPressed: () {
           Navigator.pushNamed(context, '/rank');
         },),
-        '/rank' : (context) => const RankPage(),
         '/invite' :(context) => const InvitePage(),
-        // '/workout' : (context) => const WorkoutPage(),
+        '/workout' : (context) => const WorkoutPage(),
         // '/result' : (context) => const ResultPage(),
         '/setting' : (context) => const SettingPage(),
         '/setGoal' : (context) => const SetGoalPage(),

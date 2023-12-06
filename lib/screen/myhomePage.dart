@@ -24,7 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
     ),
-    const RankPage(),
+    const WorkoutPage(),
     const SettingPage(),
   ] ,
       ),
@@ -37,16 +37,16 @@ class _MyHomePageState extends State<MyHomePage> {
         },
        items: const <BottomNavigationBarItem>[
       BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: '홈',
+        icon: Icon(Icons.group),
+        label: '내 그룹',
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        label: '랭킹',
+        icon: Icon(Icons.fitness_center),
+        label: '운동하기',
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.settings),
-        label: '설정',
+        label: '내 설정',
       ),
     ],
     selectedItemColor: Colors.red,

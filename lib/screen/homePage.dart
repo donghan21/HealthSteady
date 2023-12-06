@@ -144,16 +144,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       unselectedLabelColor: const Color.fromARGB(255, 73, 5, 5),
                       tabs: groupsnapshot.data!.asMap().entries
                           .map((entry) {
-                            int idx = entry.key;
-                            var group = entry.value;
                             return Tab(child: Icon(Icons.circle, size: 10));
                           })
                           .toList(),
-                  //     tabs: List<Widget>.generate(_tabController.length, (int index) {
-                  //                         return Tab( child: Text(''),
-                  // );
-                  //     }
-                  //     )
                     ),
                   ),
                   Expanded(
@@ -166,155 +159,194 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 builder: (context, membersnapshot) {
                                   if (membersnapshot.hasData) {
                                     print('index : ${_tabController.index}');
-                                    return GridView.builder(
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 3,
-                                                childAspectRatio: 2 /
-                                                    3 // Number of items in a row
-                                                ),
-                                        shrinkWrap: true,
-                                        itemCount: membersnapshot.data!.length,
-                                        itemBuilder: (context, index) {
-                                          int actualMinutes =
-                                              membersnapshot.data![index]
-                                                  ['workout_time']['actual'];
-                                          int goalMinutes =
-                                              membersnapshot.data![index]
-                                                  ['workout_time']['goal'];
-                                          return GestureDetector(
-                                            onTap: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    // return AlertDialog(
-                                                    //   title: Text(snapshot.data![index]['nickname']),
-                                                    //   content: Text('운동시간: ${minutes ~/ 60}h ${minutes % 60}m'),
-                                                    //   actions: [
-                                                    //     TextButton(onPressed: () {
-                                                    //       Navigator.pop(context);
-                                                    //     }, child: Text('확인'))
-                                                    //   ],
-                                                    // );
-                                                    return Dialog(
-                                                      child: Container(
-                                                        height: H * 0.5,
-                                                        width: W * 0.8,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.black,
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.white,
-                                                              width: 2),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        child:
-                                                            Column(children: [
-                                                          SizedBox(
-                                                              height: H * 0.01),
-                                                          SizedBox(
-                                                              height: H * 0.05,
-                                                              child: Text(
-                                                                membersnapshot.data![
-                                                                        index][
-                                                                    'nickname'],
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        20,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              )),
-                                                          Container(
-                                                            height: H * 0.15,
+                                    return Column(
+                                      children: [
+                                        GridView.builder(
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 3,
+                                                    childAspectRatio: 2 /
+                                                        3 // Number of items in a row
+                                                    ),
+                                            shrinkWrap: true,
+                                            itemCount: membersnapshot.data!.length,
+                                            itemBuilder: (context, index) {
+                                              int actualMinutes =
+                                                  membersnapshot.data![index]
+                                                      ['workout_time']['actual'];
+                                              int goalMinutes =
+                                                  membersnapshot.data![index]
+                                                      ['workout_time']['goal'];
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        // return AlertDialog(
+                                                        //   title: Text(snapshot.data![index]['nickname']),
+                                                        //   content: Text('운동시간: ${minutes ~/ 60}h ${minutes % 60}m'),
+                                                        //   actions: [
+                                                        //     TextButton(onPressed: () {
+                                                        //       Navigator.pop(context);
+                                                        //     }, child: Text('확인'))
+                                                        //   ],
+                                                        // );
+                                                        return Dialog(
+                                                          child: Container(
+                                                            height: H * 0.5,
+                                                            width: W * 0.8,
                                                             decoration:
                                                                 BoxDecoration(
-                                                              image:
-                                                                  DecorationImage(
-                                                                image: Image.asset(
-                                                                        'assets/images/memoticon1.png')
-                                                                    .image,
-                                                                fit: BoxFit
-                                                                    .contain,
-                                                              ),
+                                                              color: Colors.black,
+                                                              border: Border.all(
+                                                                  color:
+                                                                      Colors.white,
+                                                                  width: 2),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(10),
                                                             ),
+                                                            child:
+                                                                Column(children: [
+                                                              SizedBox(
+                                                                  height: H * 0.01),
+                                                              SizedBox(
+                                                                  height: H * 0.05,
+                                                                  child: Text(
+                                                                    membersnapshot.data![
+                                                                            index][
+                                                                        'nickname'],
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            20,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold),
+                                                                  )),
+                                                              Container(
+                                                                height: H * 0.15,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  image:
+                                                                      DecorationImage(
+                                                                    image: Image.asset(
+                                                                            'assets/images/memoticon1.png')
+                                                                        .image,
+                                                                    fit: BoxFit
+                                                                        .contain,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height: H * 0.05),
+                                                              SizedBox(
+                                                                height: H * 0.04,
+                                                                child: Text(
+                                                                  '이번주 운동 횟수 ${membersnapshot.data![index]['workout_number']['actual']}회 (목표 ${membersnapshot.data![index]['workout_number']['goal']}회)',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 15,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: H * 0.04,
+                                                                child: Text(
+                                                                  '이번주 운동 시간 ${actualMinutes ~/ 60}:${actualMinutes % 60} (목표 ${goalMinutes ~/ 60}:${(goalMinutes % 60).toString().padLeft(2, '0')})',
+                                                                  style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 15,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: H * 0.04,
+                                                                child: Text(
+                                                                  '상태 메시지 : ${membersnapshot.data![index]['status_message']}',
+                                                                  style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 15,
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ]),
                                                           ),
-                                                          SizedBox(
-                                                              height: H * 0.05),
-                                                          SizedBox(
-                                                            height: H * 0.04,
-                                                            child: Text(
-                                                              '이번주 운동 횟수 ${membersnapshot.data![index]['workout_number']['actual']}회 (목표 ${membersnapshot.data![index]['workout_number']['goal']}회)',
-                                                              style:
-                                                                  const TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 15,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: H * 0.04,
-                                                            child: Text(
-                                                              '이번주 운동 시간 ${actualMinutes ~/ 60}:${actualMinutes % 60} (목표 ${goalMinutes ~/ 60}:${(goalMinutes % 60).toString().padLeft(2, '0')})',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 15,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: H * 0.04,
-                                                            child: Text(
-                                                              '상태 메시지 : ${membersnapshot.data![index]['status_message']}',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 15,
-                                                              ),
-                                                            ),
-                                                          )
-                                                        ]),
+                                                        );
+                                                      });
+                                                },
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: H * 0.15,
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: Image.asset(
+                                                                  'assets/images/memoticon1.png')
+                                                              .image,
+                                                          fit: BoxFit.contain,
+                                                        ),
                                                       ),
-                                                    );
-                                                  });
-                                            },
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: H * 0.15,
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      image: Image.asset(
-                                                              'assets/images/memoticon1.png')
-                                                          .image,
-                                                      fit: BoxFit.contain,
                                                     ),
+                                                    Text(
+                                                      membersnapshot.data![index]
+                                                          ['nickname'],
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Text(
+                                                        '${actualMinutes ~/ 60}h ${(actualMinutes % 60).toString().padLeft(2, '0')}m',
+                                                        style:  TextStyle(
+                                                            color: Colors.white))
+                                                  ],
+                                                ),
+                                              );
+                                            }),
+                                            SizedBox(height: H*0.03),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) => RankPage(memberList : membersnapshot.data!)));
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.white, width: 2.0),
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: Colors.black,
+                                          ),
+                                          height: H * 0.07,
+                                          width: W * 0.42,
+                                        
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                width: W * 0.1,
+                                                child: const Center(
+                                                  child: Icon(
+                                                    Icons.star_border,
+                                                    color: Colors.white,
+                                                    size: 40,
                                                   ),
-                                                ),
-                                                Text(
-                                                  membersnapshot.data![index]
-                                                      ['nickname'],
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(
-                                                    '${actualMinutes ~/ 60}h ${(actualMinutes % 60).toString().padLeft(2, '0')}m',
-                                                    style: TextStyle(
-                                                        color: Colors.white))
-                                              ],
-                                            ),
-                                          );
-                                        });
+                                                ),),
+                                              SizedBox(
+                                                width: W * 0.3,
+                                                child: Center(child: Text('랭킹 보기', style: TextStyle(color: Colors.white, fontSize: 20.0),)),),
+                                              
+                                              
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                      ],
+                                    );
                                   } else {
                                     return Container(
                                       color: Colors.black,
@@ -462,10 +494,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   )
                 ]),
                 floatingActionButton: FloatingActionButton(
+                  child: const Icon(Icons.group_add, color: Colors.white,),
                   heroTag : _tabController.index,
                   backgroundColor: Colors.red,
                   onPressed: () {
-                    print('herotag : ${_tabController.index}');
                     if(_tabController.index == 0) {
                     Navigator.pushNamed(context, '/invite');
                     } else {
@@ -480,10 +512,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         fontSize: 16.0);
                     }
                   },
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
                 ),
               ),
             );
