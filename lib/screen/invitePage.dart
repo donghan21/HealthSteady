@@ -40,7 +40,49 @@ class _InvitePageState extends State<InvitePage> {
     return userList;
   }
 
+  Future<void> _inviteMember(String invitedEmail, String inviterEmail) async {
+    if(invitedEmail == inviterEmail) {
+      Fluttertoast.showToast(
+        msg: '자기 자신을 초대할 수 없습니다.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+      );
+      return;
+    }
+
+    CollectionReference groups = db.collection('groups');
+    CollectionReference users = db.collection('users');
+    DocumentReference invited = users.doc(invitedEmail);
+    DocumentReference group = groups.doc(inviterEmail);
+    group.update({
+      'member': FieldValue.arrayUnion([invited]),
+      'member_number' : FieldValue.increment(1),
+    });
+
+    invited.update({
+      'group': FieldValue.arrayUnion([group]),
+    });
+
+    Fluttertoast.showToast(
+      msg: '해당 유저가 그룹에 추가되었습니다.',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+    );
+  }
+
   Future<void> _sendInvitation(String invitedEmail, String inviterEmail) async {
+    if(invitedEmail == inviterEmail) {
+      Fluttertoast.showToast(
+        msg: '자기 자신을 초대할 수 없습니다.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+      );
+      return;
+    }
+
     CollectionReference groups = db.collection('groups');
     DocumentReference group = groups.doc(inviterEmail);
 
@@ -143,7 +185,10 @@ class _InvitePageState extends State<InvitePage> {
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
                             ),                          
-                            onPressed: () {_sendInvitation(snapshot.data![index]['email'], currentUserEmail);},
+                            onPressed: () {
+                              //_sendInvitation(snapshot.data![index]['email'], currentUserEmail);
+                              _inviteMember(snapshot.data![index]['email'], currentUserEmail);
+                              },
                             child: const Text('초대하기', style: TextStyle(color: Colors.white),),
                           ),
                         );

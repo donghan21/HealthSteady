@@ -266,14 +266,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                               ),
                                                               SizedBox(
                                                                 height: H * 0.04,
-                                                                child: Text(
+                                                                child: membersnapshot.data![index]['status_message'] != null ? Text(
                                                                   '상태 메시지 : ${membersnapshot.data![index]['status_message']}',
                                                                   style: const TextStyle(
                                                                     color: Colors
                                                                         .white,
                                                                     fontSize: 15,
                                                                   ),
-                                                                ),
+                                                                ) : Text('상태 메시지가 없습니다', style: const TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontSize: 15,
+                                                                )),
                                                               )
                                                             ]),
                                                           ),

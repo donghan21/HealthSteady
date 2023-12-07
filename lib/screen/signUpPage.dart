@@ -70,7 +70,27 @@ class _SignUpPageState extends State<SignUpPage> {
       await db.collection('users').doc(_emailController.text).set({
         'email': _emailController.text,
         'nickname': _nameController.text,
-        'group' : [groupsDocumentRef]
+        'group' : [groupsDocumentRef],
+        'workout_time' : {
+          'actual' : 0,
+          'goal' : 0,
+        },
+        'workout_number' : {
+          'actual' : 0,
+          'goal' : 0,
+        },
+        'status_message' : null,
+        'gym_loc': null,
+        'goal' : {
+          'monday' : null,
+          'tuesday': null,
+          'wednesday' : null,
+          'thursday' : null,
+          'friday' : null,
+          'saturday' : null,
+          'sunday' : null,
+          'others' : null,
+        }
       });
 
       Fluttertoast.showToast(msg: '회원가입에 성공했습니다.');

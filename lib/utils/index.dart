@@ -7,4 +7,5 @@ export '../screen/invitePage.dart' show InvitePage;
 export '../screen/myhomePage.dart' show MyHomePage;
 export '../screen/setGoalPage.dart' show SetGoalPage;
 export '../screen/workoutPage.dart' show WorkoutPage;
+export '../screen/resultPage.dart' show ResultPage;
 export 'bottomNavigationBar.dart';

@@ -143,7 +143,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
                 DocumentReference user = users.doc(FirebaseAuth.instance.currentUser!.email);
                 DocumentSnapshot snapshot = await user.get();
                 Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-                List<dynamic> others = data['goal']['others'];
+                List<dynamic>? others = data['goal']['others'];
                 Map<String, dynamic> goalMap = {};
                 goalMap.addAll({'others' : others});
                 if(_monday.isChecked) {
