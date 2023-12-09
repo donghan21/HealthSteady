@@ -99,10 +99,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
             future: _fetchData(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                List<dynamic> goal = snapshot.data!['goal']['others'] ?? [];
+                List<dynamic> goal = snapshot.data!['goal_sentence'] ?? [];
                 checkboxNotifiers = List<ValueNotifier<bool>>.generate(
-                    goal.length, (index) => ValueNotifier<bool>(false));
-      
+                    goal.length, (index) => ValueNotifier<bool>(false));      
                 return SingleChildScrollView(
                   child: Center(
                     child: Column(

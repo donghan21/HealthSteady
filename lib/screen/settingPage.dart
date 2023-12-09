@@ -49,10 +49,10 @@ class _SettingPageState extends State<SettingPage> {
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
           InkWell(
             onTap: () {
-              Fluttertoast.showToast(msg: '아직 준비중인 기능입니다.');
+              Navigator.pushNamed(context, '/editProfile');
               },
             child: SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
-              Text('회원정보 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
+              Text('운동목표/상태메시지 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
               Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
             ])),
           ),
@@ -73,7 +73,7 @@ class _SettingPageState extends State<SettingPage> {
               Fluttertoast.showToast(msg: '아직 준비중인 기능입니다.');
             },
             child: SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
-              Text('헬스장 설정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
+              Text('그룹초대 수락/거절', style: TextStyle(color: Colors.white, fontSize: 20.0)),
               Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
             ])),
           ),

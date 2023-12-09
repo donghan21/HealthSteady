@@ -90,8 +90,8 @@ class _SignUpPageState extends State<SignUpPage> {
           'friday' : null,
           'saturday' : null,
           'sunday' : null,
-          'others' : null,
-        }
+        },
+        'goal_sentence' : [],
       });
 
       Fluttertoast.showToast(msg: '회원가입에 성공했습니다.');
