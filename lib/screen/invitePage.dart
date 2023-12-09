@@ -16,12 +16,17 @@ class _InvitePageState extends State<InvitePage> {
   TextEditingController _searchController = TextEditingController();
   FirebaseFirestore db = FirebaseFirestore.instance;
   String currentUserEmail = FirebaseAuth.instance.currentUser!.email!;
+  Future<List> _userListFuture = Future.value([]);
+  List<dynamic> _userList = [];
+  List<dynamic> _filteredUserList = [];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {});
+      setState(() {
+        _userListFuture = _fetchUsers();
+      });
     });
   }
 
@@ -31,13 +36,13 @@ class _InvitePageState extends State<InvitePage> {
   }
 
   Future<List<dynamic>> _fetchUsers() async {
-    var userList = [];
     var users = await db.collection('users').get();
     for (var user in users.docs) {
-      userList.add(user.data());
+      _filteredUserList.add(user.data());
+      _userList.add(user.data());
     }
-    print ('userList : $userList');
-    return userList;
+    print ('filtereduserList.length : ${_filteredUserList.length}');
+    return _filteredUserList;
   }
 
   Future<void> _inviteMember(String invitedEmail, String inviterEmail) async {
@@ -106,6 +111,17 @@ class _InvitePageState extends State<InvitePage> {
     );
   }
 
+void _filterUsers(String query) {
+  List _tempList = [];
+
+  _tempList = _userList.where((user) {
+    return user['email'].toLowerCase().contains(query.toLowerCase()) || 
+           user['nickname'].toLowerCase().contains(query.toLowerCase());
+  }).toList();
+
+  _filteredUserList = _tempList;
+}
+
   @override
   Widget build(BuildContext context) {
     H = MediaQuery.of(context).size.height;
@@ -159,6 +175,11 @@ class _InvitePageState extends State<InvitePage> {
                   Flexible(
                     flex: 5,
                     child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          _filterUsers(value);
+                        });
+                      },
                       controller: _searchController,
                       style: const TextStyle(color: Colors.black, fontSize: 20),
                       decoration: const InputDecoration(
@@ -171,33 +192,33 @@ class _InvitePageState extends State<InvitePage> {
                 ],
               ),
             ),
-            SingleChildScrollView(
-              child: FutureBuilder(future: _fetchUsers(), builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
+            FutureBuilder(future: _userListFuture, builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Expanded(
+                  child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
+                      itemCount: _filteredUserList.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(snapshot.data![index]['email'], style: TextStyle(color: Colors.white)),
-                          subtitle: Text(snapshot.data![index]['nickname'], style: TextStyle(color: Colors.white)),
+                          title: Text(_filteredUserList[index]['email'], style: TextStyle(color: Colors.white)),
+                          subtitle: Text(_filteredUserList[index]['nickname'], style: TextStyle(color: Colors.white)),
                           trailing: ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
                             ),                          
                             onPressed: () {
                               //_sendInvitation(snapshot.data![index]['email'], currentUserEmail);
-                              _inviteMember(snapshot.data![index]['email'], currentUserEmail);
+                              _inviteMember(_filteredUserList[index]['email'], currentUserEmail);
                               },
                             child: const Text('초대하기', style: TextStyle(color: Colors.white),),
                           ),
                         );
-                      });
-                } else {
-                  return Container(color: Colors.black, child: const Center(child: CircularProgressIndicator()));
-                }
-              }),
-            )
+                      }),
+                );
+              } else {
+                return Container(color: Colors.black, child: const Center(child: CircularProgressIndicator()));
+              }
+            })
           ],
         ),
       ),
