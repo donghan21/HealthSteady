@@ -15,7 +15,8 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   late double H;
   late double W;
-  bool signUpResult = false;
+  bool _signUpResult = false;
+  bool _isLoading = false;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _passwordCheckController = TextEditingController();
@@ -226,8 +227,14 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(height: H * 0.1),
                 ElevatedButton(
                   onPressed: () async {
-                    signUpResult = await signUp();
-                    if (signUpResult) {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    _signUpResult = await signUp();
+                    setState(() {
+                      _isLoading = false;
+                    });                              
+                    if (_signUpResult) {
                       Navigator.pop(context);
                     }
                   },
@@ -236,7 +243,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           MaterialStateProperty.all<Color>(Colors.red),
                       minimumSize: MaterialStateProperty.all<Size>(
                           Size(W * 0.8, H * 0.07))),
-                  child: const Text(
+                  child: _isLoading ? CircularProgressIndicator() : Text(
                     '회원가입',
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),

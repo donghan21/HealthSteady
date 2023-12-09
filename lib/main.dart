@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
         '/workout' : (context) => const WorkoutPage(),
         // '/result' : (context) => const ResultPage(),
         '/setting' : (context) => const SettingPage(),
-        '/setGoal' : (context) => const SetGoalPage(),
+        '/weekGoal' : (context) => const WeekGoalPage(),
+        '/editProfile' : (context) => const EditProfilePage(),
 
       }
     );

@@ -5,14 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SetGoalPage extends StatefulWidget {
-  const SetGoalPage({super.key});
+class WeekGoalPage extends StatefulWidget {
+  const WeekGoalPage({super.key});
 
   @override
-  State<SetGoalPage> createState() => _SetGoalPageState();
+  State<WeekGoalPage> createState() => _WeekGoalPageState();
 }
 
-class _SetGoalPageState extends State<SetGoalPage> {
+class _WeekGoalPageState extends State<WeekGoalPage> {
   late double W;
   late double H;
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -92,7 +92,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
       child: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text('운동목표 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
+        title: Text('주간목표 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {

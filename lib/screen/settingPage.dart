@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../utils/index.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -46,44 +47,74 @@ class _SettingPageState extends State<SettingPage> {
           ),
           SizedBox(height: H * 0.02),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
-            Text('회원정보 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
-            Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
-          ])),
-          Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
           InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/setGoal');
+              Fluttertoast.showToast(msg: '아직 준비중인 기능입니다.');
               },
-            child: SizedBox(height: H * 0.06, width: W*0.8, 
-              child: const Row(children: [
-              Text('운동목표 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
+            child: SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
+              Text('회원정보 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
               Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
             ])),
           ),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
-            Text('헬스장 설정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
-            Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
-          ])),
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/weekGoal');
+              },
+            child: SizedBox(height: H * 0.06, width: W*0.8, 
+              child: const Row(children: [
+              Text('주간 계획 수정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
+              Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
+            ])),
+          ),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
-            Text('알람 설정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
-            Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
-          ])),
+          InkWell(
+            onTap: () {
+              Fluttertoast.showToast(msg: '아직 준비중인 기능입니다.');
+            },
+            child: SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
+              Text('헬스장 설정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
+              Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
+            ])),
+          ),
           Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
-          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
-            Text('자주묻는 질문', style: TextStyle(color: Colors.white, fontSize: 15.0)),
-            Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
-          ])),
-          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
-            Text('앱 가이드', style: TextStyle(color: Colors.white, fontSize: 15.0)),
-            Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
-          ])),
-          SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
-            Text('앱 정보', style: TextStyle(color: Colors.white, fontSize: 15.0)),
-            Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
-          ])), 
+          InkWell(
+            onTap: () {
+              Fluttertoast.showToast(msg: '아직 준비중인 기능입니다.');
+            },
+            child: SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
+              Text('알람 설정', style: TextStyle(color: Colors.white, fontSize: 20.0)),
+              Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
+            ])),
+          ),
+          Divider(color: Colors.white, indent: W*0.03, endIndent: W*0.03),
+          InkWell(
+            onTap: () {
+              Fluttertoast.showToast(msg: '아직 준비중인 기능입니다.');            
+            },
+            child: SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
+              Text('자주묻는 질문', style: TextStyle(color: Colors.white, fontSize: 15.0)),
+              Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
+            ])),
+          ),
+          InkWell(
+            onTap: () {
+              Fluttertoast.showToast(msg: '아직 준비중인 기능입니다.');
+            },
+            child: SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
+              Text('앱 가이드', style: TextStyle(color: Colors.white, fontSize: 15.0)),
+              Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
+            ])),
+          ),
+          InkWell(
+            onTap: () {
+              Fluttertoast.showToast(msg: '아직 준비중인 기능입니다.');
+            },
+            child: SizedBox(height: H * 0.06, width: W*0.8, child: const Row(children: [
+              Text('앱 정보', style: TextStyle(color: Colors.white, fontSize: 15.0)),
+              Expanded(child: Align(alignment: Alignment.centerRight,child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20.0)))
+            ])),
+          ), 
           SizedBox(height: H * 0.1),
           Row(children: [
             
@@ -95,7 +126,11 @@ class _SettingPageState extends State<SettingPage> {
               },
               child: Container(width: W*0.24, height: H*0.05,decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.grey),child: Center(child: Text('로그아웃', style: TextStyle(color: Colors.white, fontSize: 15.0))))),
             SizedBox(width: W*0.18),   
-            Container(width: W*0.24, height: H*0.05,decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.red),child: Center(child: Text('회원탈퇴', style: TextStyle(color: Colors.white, fontSize: 15.0)))),
+            InkWell(
+              onTap: () {
+                Fluttertoast.showToast(msg: '아직 준비중인 기능입니다.');
+              },
+              child: Container(width: W*0.24, height: H*0.05,decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.red),child: Center(child: Text('회원탈퇴', style: TextStyle(color: Colors.white, fontSize: 15.0))))),
     
                ]),     
       
